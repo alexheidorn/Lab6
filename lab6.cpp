@@ -118,7 +118,7 @@ list<ExpressionPart*> readExpr() {
         }
         else{
             if (epart->getEType() == LPAREN) { epart->setEType(RPAREN); }
-            if (epart->getEType() == RPAREN)
+            if (epart->getEType() == RPAREN) { epart->setEType(LPAREN); }
             expressions.push_front(epart);
         }
     } while (epart->getEType() != SEMI);
