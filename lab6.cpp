@@ -117,6 +117,8 @@ list<ExpressionPart*> readExpr() {
             expressions.push_back(epart);
         }
         else{
+            if (epart->getEType() == LPAREN) { epart->setEType(RPAREN); }
+            if (epart->getEType() == RPAREN)
             expressions.push_front(epart);
         }
     } while (epart->getEType() != SEMI);
@@ -331,12 +333,10 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
                 return pfExprs;
                 break;
             case LPAREN:
-                ep->setEType(RPAREN);
                 opStack.push_front(ep);
                 break;
             case RPAREN:
-                ep->setEType(LPAREN);
-                while ((!opStack.empty()) && (opStack.front()->getEType() != RPAREN)) {
+                while ((!opStack.empty()) && (opStack.front()->getEType() != LPAREN)) {
                     pfExprs.push_back(opStack.front());
                     opStack.pop_front();
                 }
