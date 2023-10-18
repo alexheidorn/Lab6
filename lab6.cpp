@@ -126,8 +126,15 @@ list<ExpressionPart*> readExpr() {
 }
 
 void showExpr(list<ExpressionPart*> expressions) {
-    list<ExpressionPart*>::reverse_iterator ep;
-    for (ep = expressions.rbegin(); ep != expressions.rend(); ++ep) {
+    expressions.reverse();
+    for (auto ep : expressions) {
+        if (ep->getEType() == SEMI){
+            ExpressionPart* front = expressions.front();
+            expressions.push_back(front);
+            expressions.pop_front();
+        }
+        if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
+        else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
         ep->print();
     }
     cout << endl;
