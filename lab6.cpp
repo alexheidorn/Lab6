@@ -315,13 +315,15 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
         if (ep->getEType() == SEMI){
             ifExprs.push_back(ep);
             ifExprs.pop_front();
+            showExpr(ifExprs);
         }
         else{
             if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
             else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
-            ifExprs.push_front(ep);
         }
+    }
 
+    for (auto ep : ifExprs) {
         switch (ep->getEType()) {
             case SEMI:
                 while (!opStack.empty()) {
