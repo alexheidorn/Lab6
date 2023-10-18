@@ -311,19 +311,15 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
     list<ExpressionPart*> opStack;
 
     ifExprs.reverse();
-    for (auto ep : ifExprs) {
-        if (ep->getEType() == SEMI){
-            ifExprs.push_back(ep);
-            ifExprs.pop_front();
-            showExpr(ifExprs);
-        }
-        else{
-            if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
-            else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
-        }
-    }
+    ExpressionPart* semi = ifExprs.front();
+    ifExprs.push_back(semi);
+    ifExprs.pop_front();
+    showExpr(ifExprs);
 
     for (auto ep : ifExprs) {
+        if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
+        else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
+        
         switch (ep->getEType()) {
             case SEMI:
                 while (!opStack.empty()) {
