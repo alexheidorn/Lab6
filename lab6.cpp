@@ -4,13 +4,11 @@
 * ASSIGNMENT/TITLE
 *  
 */
-
 #include <iostream>
 #include <string>
 #include <list>
 #include <math.h>
 using namespace std;
-
     const int NUMBER = 0;
     const int LPAREN = 1;
     const int RPAREN = 2;
@@ -23,34 +21,24 @@ using namespace std;
     const string OPERATOR_STRINGS[] = {"NUMBER", "(", ")", "+", "-", "*", "/", "^", ";"};
     const int OPERATOR_PRECEDENCE[] = {-1, 0, 0, 1, 1, 2, 2, 3, 0};
     const bool OPERATOR_LEFT_ASSOCIATIVE[] = { false, false, false, true, true, true, true, false, false};
-
     class ExpressionPart {
     protected:
         int eType;
-
         ExpressionPart() {}
-
     public:
         ExpressionPart(int et) { eType = et; }
-
         int getEType() { return eType; }
-
         void setEType(int et) { eType = et; }
-
         virtual void print() {}
     };
-
     class ExpressionNumber : public ExpressionPart {
     protected:
         double number;
-
         ExpressionNumber() {}
-
     public:
         ExpressionNumber(double n) : ExpressionPart(NUMBER) {
             number = n;
         }
-
         ExpressionNumber(string s) {
             try {
                 number = stoi(s);
@@ -60,18 +48,14 @@ using namespace std;
                 throw "NOT A NUMBER";
             }
         }
-
         double getNumber() { return number; }
         void print() {
             cout << number << " ";
         }
     };
-
     class ExpressionOperator : public ExpressionPart {
     protected:
-
         ExpressionOperator() {}
-
     public:
         ExpressionOperator(string s) {
             int op;
@@ -88,11 +72,8 @@ using namespace std;
         void print() {
             cout << OPERATOR_STRINGS[getEType()] << " ";
         }
-
     };
-
 const string INFIX_FORMAT_ERROR = "Expression not in infix format";
-
 list<ExpressionPart*> readExpr() {
     cout << "Expression: ";
     list<ExpressionPart*> expressions;
@@ -124,22 +105,12 @@ list<ExpressionPart*> readExpr() {
     } while (epart->getEType() != SEMI);
     return expressions;
 }
-
 void showExpr(list<ExpressionPart*> expressions) {
-    expressions.reverse();
     for (auto ep : expressions) {
-        if (ep->getEType() == SEMI){
-            ExpressionPart* front = expressions.front();
-            expressions.push_back(front);
-            expressions.pop_front();
-        }
-        if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
-        else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
         ep->print();
     }
     cout << endl;
 }
-
 /*void evalPostfixExpr(list<ExpressionPart*> expressions) {
     list<ExpressionPart*> exprStack;
     for (auto ep : expressions) {
@@ -261,7 +232,6 @@ void evalPrefixExpr(list<ExpressionPart*> expressions) {
         }
     }
 }
-
 /*list<ExpressionPart*> convertToPostfix(list<ExpressionPart*> ifExprs) {
     list<ExpressionPart*> pfExprs;
     list<ExpressionPart*> opStack;
@@ -320,7 +290,6 @@ void evalPrefixExpr(list<ExpressionPart*> expressions) {
     return pfExprs;
 }
 */
-
 list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
     list<ExpressionPart*> pfExprs;
     list<ExpressionPart*> opStack;
@@ -378,7 +347,6 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
     pfExprs.clear();
     return pfExprs;
 }
-
 int main() {
     try {
         list<ExpressionPart *> expressions = readExpr();
