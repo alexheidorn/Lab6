@@ -113,28 +113,13 @@ list<ExpressionPart*> readExpr() {
                 break;
             }
         }
-        if (epart->getEType() == SEMI){
-            expressions.push_back(epart);
-        }
-        else{
-            if (epart->getEType() == LPAREN) { epart->setEType(RPAREN); }
-            else if (epart->getEType() == RPAREN) { epart->setEType(LPAREN); }
-            expressions.push_front(epart);
-        }
+        expressions.push_back(epart);
     } while (epart->getEType() != SEMI);
     return expressions;
 }
 
 void showExpr(list<ExpressionPart*> expressions) {
-    expressions.reverse();
     for (auto ep : expressions) {
-        if (ep->getEType() == SEMI){
-            ExpressionPart* front = expressions.front();
-            expressions.push_back(front);
-            expressions.pop_front();
-        }
-        if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
-        else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
         ep->print();
     }
     cout << endl;
@@ -324,7 +309,19 @@ void evalPrefixExpr(list<ExpressionPart*> expressions) {
 list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
     list<ExpressionPart*> pfExprs;
     list<ExpressionPart*> opStack;
+
+    ifExprs.reverse();
     for (auto ep : ifExprs) {
+        if (ep->getEType() == SEMI){
+            ifExprs.push_back(ep);
+            ifExprs.pop_front();
+        }
+        else{
+            if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
+            else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
+            ifExprs.push_front(ep);
+        }
+
         switch (ep->getEType()) {
             case SEMI:
                 while (!opStack.empty()) {
