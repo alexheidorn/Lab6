@@ -1,7 +1,7 @@
 /*
 * Alex Heidorn
-* Created: DATE
-* ASSIGNMENT/TITLE
+* Created: 10-12-23
+* CS2 Lab6
 *  
 */
 
