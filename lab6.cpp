@@ -1,9 +1,20 @@
 /*
 * Alex Heidorn
-* Created: DATE
-* ASSIGNMENT/TITLE
+* Created: 10-12-23
+* CS2 Lab6
 *  
 */
+
+/*Results
+Expression: ( 3 + 7 ) / 5 - 4 / 2 =
+( 3 + 7 ) / 5 - 4 / 2 
+Prefix version of expression: - / + 3 7 5 / 4 2 
+Result is 0
+PS C:\Users\alexh\CS2>
+
+
+*/
+
 #include <iostream>
 #include <string>
 #include <list>
@@ -74,7 +85,7 @@ using namespace std;
         }
     };
 const string INFIX_FORMAT_ERROR = "Expression not in infix format";
-list<ExpressionPart*> readExpr() {
+list<ExpressionPart*> readExpr() { //reads in expression backwards
     cout << "Expression: ";
     list<ExpressionPart*> expressions;
     ExpressionPart *epart = NULL;
@@ -94,24 +105,24 @@ list<ExpressionPart*> readExpr() {
                 break;
             }
         }
-        if (epart->getEType() == SEMI){
+        if (epart->getEType() == SEMI){ //put semi colon at the back
             expressions.push_back(epart);
         }
         else{
-            if (epart->getEType() == LPAREN) { epart->setEType(RPAREN); }
-            else if (epart->getEType() == RPAREN) { epart->setEType(LPAREN); }
-            expressions.push_front(epart);
+            if (epart->getEType() == LPAREN) { epart->setEType(RPAREN); } //switch parentheses
+            else if (epart->getEType() == RPAREN) { epart->setEType(LPAREN); } 
+            expressions.push_front(epart); //push everything else to front
         }
     } while (epart->getEType() != SEMI);
     return expressions;
 }
 void showExpr(list<ExpressionPart*> expressions) {
-    for (auto ep = expressions.rbegin(); ep != expressions.rend(); ++ep) {
+    for (auto ep = expressions.rbegin(); ep != expressions.rend(); ++ep) { //iterate through expression backwards (puts it in the correct direction)
         if ((*ep)->getEType() == SEMI){
             //do nothing
         }
         else{
-            if ((*ep)->getEType() == LPAREN) { cout << ") "; }
+            if ((*ep)->getEType() == LPAREN) { cout << ") "; } //swap parantheses (again) so it's displayed correctly
             else if ((*ep)->getEType() == RPAREN) { cout << "( "; }
             else (*ep)->print();
         }
@@ -209,7 +220,7 @@ void evalPrefixExpr(list<ExpressionPart*> expressions) {
             case TIMES:
             case DIVIDE:
             case POWER:
-                ExpressionPart *lft = exprStack.front();
+                ExpressionPart *lft = exprStack.front(); //reverse L & R operator from postfix expression
                 exprStack.pop_front();
                 ExpressionPart *rgt = exprStack.front();
                 exprStack.pop_front();
