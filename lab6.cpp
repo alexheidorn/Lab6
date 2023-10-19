@@ -287,14 +287,13 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
     list<ExpressionPart*> pfExprs;
     list<ExpressionPart*> opStack;
 
-    ifExprs.reverse();
-    ExpressionPart* semi = ifExprs.front();
-    ifExprs.push_back(semi);
-    ifExprs.pop_front();
+    ExpressionPart* semi = ifExprs.back();
+    ifExprs.push_front(semi);
+    ifExprs.pop_back();
     
-    for (auto ep : ifExprs) {
-        if (ep->getEType() == LPAREN) { ep->setEType(RPAREN); }
-        else if (ep->getEType() == RPAREN) { ep->setEType(LPAREN); }
+    for (auto ep = ifExprs.rbegin(); ep != ifExprs.rend(); ++ep) {
+        if ((*ep)->getEType() == LPAREN) { (*ep)->setEType(RPAREN); }
+        else if ((*ep)->getEType() == RPAREN) { (*ep)->setEType(LPAREN); }
         switch (ep->getEType()) {
             case SEMI:
                 while (!opStack.empty()) {
@@ -307,11 +306,11 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
                     }
                     opStack.pop_front();
                 }
-                pfExprs.push_back(ep);
+                pfExprs.push_back((*ep));
                 return pfExprs;
                 break;
             case LPAREN:
-                opStack.push_front(ep);
+                opStack.push_front((*ep));
                 break;
             case RPAREN:
                 while ((!opStack.empty()) && (opStack.front()->getEType() != LPAREN)) {
@@ -326,7 +325,7 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
                 }
                 break;
             case NUMBER:
-                pfExprs.push_back(ep);
+                pfExprs.push_back((*ep));
                 break;
             case ADD:
             case MINUS:
@@ -335,13 +334,13 @@ list<ExpressionPart*> convertToPrefix(list<ExpressionPart*> ifExprs) {
             case POWER:
                 while ((!opStack.empty()) &&
                         (opStack.front()->getEType() != LPAREN) &&
-                        ((OPERATOR_PRECEDENCE[opStack.front()->getEType()] > OPERATOR_PRECEDENCE[ep->getEType()]) ||
-                        ((OPERATOR_PRECEDENCE[opStack.front()->getEType()] == OPERATOR_PRECEDENCE[ep->getEType()]) && OPERATOR_LEFT_ASSOCIATIVE[ep->getEType()]))) {
+                        ((OPERATOR_PRECEDENCE[opStack.front()->getEType()] > OPERATOR_PRECEDENCE[(*ep)->getEType()]) ||
+                        ((OPERATOR_PRECEDENCE[opStack.front()->getEType()] == OPERATOR_PRECEDENCE[(*ep)->getEType()]) && OPERATOR_LEFT_ASSOCIATIVE[(*ep)->getEType()]))) {
                     ExpressionPart *opp = opStack.front();
                     pfExprs.push_back(opp);
                     opStack.pop_front();
                 }
-                opStack.push_front(ep);
+                opStack.push_front((*ep));
                 break;
         }
     }
