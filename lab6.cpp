@@ -106,8 +106,15 @@ list<ExpressionPart*> readExpr() {
     return expressions;
 }
 void showExpr(list<ExpressionPart*> expressions) {
-    for (auto ep : expressions) {
-        ep->print();
+    for (auto ep = expressions.rbegin(); ep != expressions.rend(); ++ep) {
+        if ((*ep)->getEType() == SEMI){
+            //do nothing
+        }
+        else{
+            if ((*ep)->getEType() == LPAREN) { cout << ") "; }
+            else if ((*ep)->getEType() == RPAREN) { cout << "( "; }
+            else (*ep)->print();
+        }
     }
     cout << endl;
 }
